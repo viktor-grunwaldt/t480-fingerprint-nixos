@@ -12,18 +12,10 @@
     }:
     let
       fixups = final: prev: {
-        libfprint-tod = prev.libfprint-tod.overrideAttrs (old: rec {
-          version = "1.90.7+git20210222+tod1";
-          src = old.src.overrideAttrs {
-            rev = "v${version}";
-            outputHash = "0cj7iy5799pchyzqqncpkhibkq012g3bdpn18pfb19nm43svhn4j";
-            outputHashAlgo = "sha256";
-          };
-          buildInputs = (old.buildInputs or [ ]) ++ [ final.nss ];
-          mesonFlags = [
-            "-Ddrivers=all"
-            "-Dudev_hwdb_dir=${placeholder "out"}/lib/udev/hwdb.d"
-          ];
+        # can be removed when https://github.com/NixOS/nixpkgs/pull/389711 is merged (it won't be)
+        # follow https://github.com/NixOS/nixpkgs/pull/388905 for the current status
+        libfprint = prev.libfprint.overrideAttrs (oldAttrs: {
+          buildInputs = oldAttrs.buildInputs ++ [ prev.nss ];
         });
       };
       pkgs = import nixpkgs {
