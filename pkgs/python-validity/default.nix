@@ -9,13 +9,16 @@ in
   buildPythonPackage rec {
     pname = "python-validity";
     version = "0.14";
-
     src = fetchFromGitHub {
       owner = "uunicorn";
       repo = pname;
       rev = "${version}";
       sha256 = "sha256-6NbxeokbGW5yP3g9Q/W3k0JiU6g+qyeZfKfw0nBJ37o="; # set to lib.fakeSha256 first to get the hash
     };
+    pyproject = true;
+    build-system = [
+      python3Packages.setuptools
+    ];
 
     patches = [
       # the service writes to a temporary file in usr/share, which is write-protected in Nix.
@@ -75,6 +78,7 @@ in
       pyyaml
       dbus-python
       pygobject3
+      setuptools
     ];
 
     postInstall = ''
